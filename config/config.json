@@ -1,0 +1,29 @@
+{
+  "development": {
+    "username": "mis",
+    "password": "m!s@cc3ss",
+    "database": "mis-assetsDEV",
+    "host": "GRF-MISDEV",
+    "dialect": "mssql",
+
+    "_logging": false
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mssql",
+
+    "logging": false
+  },
+  "production": {
+    "username": "mis",
+    "password": "m!s@cc3ss",
+    "database": "mis-assets",
+    "host": "GRF-MISDEV",
+    "dialect": "mssql",
+
+    "logging": false
+  }
+}
