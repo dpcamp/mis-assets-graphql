@@ -4,12 +4,14 @@
   "description": "MIS Assets Backend using GraphQL",
   "main": "index.js",
   "scripts": {
+    "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "apollo-engine": "^1.1.2",
     "apollo-server-express": "^2.10.0",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",

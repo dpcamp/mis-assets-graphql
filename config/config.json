@@ -2,11 +2,11 @@
   "development": {
     "username": "mis",
     "password": "m!s@cc3ss",
-    "database": "mis-assetsDEV",
+    "database": "mis-assets",
     "host": "GRF-MISDEV",
     "dialect": "mssql",
 
-    "_logging": false
+    "logging": false
   },
   "test": {
     "username": "root",
