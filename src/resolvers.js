@@ -34,10 +34,11 @@ const resolvers = {
                                     include: [
                                           { model: models.phones },
                                           {
-                                                model: models.pdq_computers, include: [
-                                                      { model: models.pdq_displays },
-                                                      { model: models.pdq_applications }
-                                                ]
+                                                model: models.pdq_computers
+                                                // , include: [
+                                                //       { model: models.pdq_displays },
+                                                //       { model: models.pdq_applications }
+                                                // ]
                                           },
                                           { model: models.service_requests },
                                     ]
