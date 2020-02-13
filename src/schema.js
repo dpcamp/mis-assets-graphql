@@ -206,9 +206,9 @@ const typeDefs = gql`
     type Computers {
         computer_id: ID!
         host_name: String
-        ad_last_logon: String
+        ad_last_logon: DateTime
         current_user: String
-        memory: Int,
+        memory: Float,
         os_name: String
         chassis: String
         os_service_pack: String
@@ -220,6 +220,7 @@ const typeDefs = gql`
         pdq_applications:[Applications!]
         pdq_displays:[Displays!]
         pdq_nic_ip:[NicIPs!]
+        user: Users
     }
     type Applications {
         id: ID!

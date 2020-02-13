@@ -9,11 +9,12 @@ const resolvers = {
                               include: [
                                     { model: models.phones },
                                     {
-                                          model: models.pdq_computers, include: [
-                                                { model: models.pdq_displays },
-                                                { model: models.pdq_applications }
-                                          ]
-                                    },
+                                          model: models.pdq_computers
+                                    //       , include: [
+                                    //             { model: models.pdq_displays },
+                                    //             { model: models.pdq_applications }
+                                    //       ]
+                                     },
                                     { model: models.service_requests },
                               ]
                         })
@@ -118,7 +119,14 @@ const resolvers = {
             /* -------- Computer Queries */
             async allComputers(root, args, { models }) {
                   try {
-                        return models.pdq_computers.findAll()
+                        return models.pdq_computers.findAll({
+                              include: [
+                                    
+                                    { model: models.pdq_displays },
+                                    
+                                    { model: models.users }
+                              ]
+                        })
                   } catch (err) {
                         return (err)
                   }
