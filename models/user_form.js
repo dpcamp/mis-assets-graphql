@@ -12,9 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     display_name: DataTypes.STRING,
     user_name: DataTypes.STRING,
     employee_id: DataTypes.STRING, 
-    job_title: DataTypes.STRING,
-    building: DataTypes.STRING,  
     description: DataTypes.STRING,
+    building: DataTypes.STRING,  
+    additional_items: DataTypes.STRING,
     copy_user: DataTypes.STRING,
     create_mbx: DataTypes.BOOLEAN,
     sup_man_execs: DataTypes.BOOLEAN,
@@ -38,8 +38,9 @@ module.exports = (sequelize, DataTypes) => {
     needs_deskphone: DataTypes.BOOLEAN,
     needs_cell: DataTypes.BOOLEAN,
     pc_number: DataTypes.STRING,
-    create_mbx: DataTypes.STRING,
+    share_mbx: DataTypes.STRING,
     start_date: DataTypes.STRING,
+    phone_ext: DataType.Integer
 
   }, {
     underscored: true,

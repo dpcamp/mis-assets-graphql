@@ -64,11 +64,12 @@ const typeDefs = gql`
         display_name: String
         user_name: String
         employee_id: String 
-        job_title: String
-        building: String  
         description: String
+        building: String  
+        additional_items: String
         copy_user: String
         create_mbx: Boolean
+        share_mbx: String
         sup_man_execs: Boolean
         home_drive: Boolean
         submitted_by: String
@@ -89,6 +90,7 @@ const typeDefs = gql`
         needs_sec: Boolean
         needs_deskphone: Boolean
         needs_cell: Boolean
+        phone_ext: Int
         pc_number: String
         start_date: String
         submit_user: Users!
@@ -100,16 +102,17 @@ const typeDefs = gql`
         display_name: String
         user_name: String
         employee_id: String 
-        job_title: String
-        building: String  
         description: String
+        building: String  
+        additional_items: String
         copy_user: String
         create_mbx: Boolean
+        share_mbx: String
         sup_man_execs: Boolean
         home_drive: Boolean
         submitted_by: String
         created_by: String
-        status: String!
+        status: String
         needs_computer: Boolean
         needs_ax: Boolean
         needs_ice: Boolean
@@ -125,8 +128,11 @@ const typeDefs = gql`
         needs_sec: Boolean
         needs_deskphone: Boolean
         needs_cell: Boolean
+        phone_ext: Int
         pc_number: String
         start_date: String
+        submit_user: Users!
+        create_user: Users
     }
     type Phones {
         id: ID!

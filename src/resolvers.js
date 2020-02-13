@@ -209,6 +209,7 @@ const resolvers = {
       },
       Mutation: {
             async createUserForm(root, { input }, { models }) {
+
                   try {
                         const forms = await models.user_form.create(input)
                         const pending_count = await models.user_form.count({ where: { status: 'pending' } })
@@ -237,6 +238,7 @@ const resolvers = {
                   }
             },
             async createPhone(root, { input }, { models }) {
+                  console.log(input)
                   try {
                         const phone = await models.phones.create(input)
                         return (phone)
