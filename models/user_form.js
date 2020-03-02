@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     pc_number: DataTypes.STRING,
     share_mbx: DataTypes.STRING,
     start_date: DataTypes.STRING,
-    phone_ext: DataType.Integer
+    phone_ext: DataTypes.INTEGER
 
   }, {
     underscored: true,

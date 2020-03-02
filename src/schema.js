@@ -24,6 +24,10 @@ const typeDefs = gql`
         pdq_computers: [Computers!]
         service_requests: [ServiceRequests!]
     }
+    input UserInput {
+        user_name: String!
+        display_name: String
+    }
     type DayForceUsers {
         XRefCode: String
         FirstName: String
@@ -95,6 +99,8 @@ const typeDefs = gql`
         start_date: String
         submit_user: Users!
         create_user: Users
+        updatedAt: DateTime
+        createdAt:DateTime
     }
     input uFormInput {
         first_name: String
@@ -111,7 +117,7 @@ const typeDefs = gql`
         sup_man_execs: Boolean
         home_drive: Boolean
         submitted_by: String
-        created_by: String
+        created_user: String
         status: String
         needs_computer: Boolean
         needs_ax: Boolean
@@ -131,8 +137,6 @@ const typeDefs = gql`
         phone_ext: Int
         pc_number: String
         start_date: String
-        submit_user: Users!
-        create_user: Users
     }
     type Phones {
         id: ID!
@@ -169,7 +173,7 @@ const typeDefs = gql`
           date_created: String
           owners: [Users!]
     }
-    input uPhoneInput {
+    input newPhoneInput {
 
         full_number: String
           telephone: String
@@ -192,6 +196,7 @@ const typeDefs = gql`
           phone_number: String
           ld_changed: String
           new_phone: String
+          UserSAMAccountName:String
           switch_comments: String
           new_location: String
           drop_num: String
@@ -202,6 +207,43 @@ const typeDefs = gql`
           provider: String
           pin: String
           date_created: String
+    }
+    input uPhoneInput {
+
+        id: ID!    
+        full_number: String
+          telephone: String
+          division_id: Float
+          department: String
+          position: String
+          location: String
+          function_info: String
+          notes: String
+          account_number: String
+          date_installed: String
+          monthly_cost: String
+          investigate: Boolean
+          model: String
+          line_type: String
+          long_distance: String
+          need_voicemail: Boolean
+          disconnect_now: Boolean
+          disconnect_later: Boolean
+          phone_number: String
+          ld_changed: String
+          new_phone: String
+          UserSAMAccountName:String
+          switch_comments: String
+          new_location: String
+          drop_num: String
+          port_num: Float
+          extension: Int
+          vm_id: Int
+          binding_post: Float
+          provider: String
+          pin: String
+          date_created: String
+          owners: [UserInput]
     }
     type Computers {
         computer_id: ID!
@@ -249,17 +291,17 @@ const typeDefs = gql`
     }
     type Query {
         allUsers: [Users!]!
-        User(user_name: String!): Users
+        user(user_name: String, ext: String): Users
         dfUser(emp_id: String!): DayForceUsers
 
         allUserForms(status: String, submitted_by: String): UserForms
-        UserForm(id: String!): UserForm
+        userForm(id: String!): UserForm
 
         allComputers: [Computers!]!
-        Computer(host_name: String!): Computers
+        computer(computer_id: ID!): Computers
 
         allPhones: [Phones!]!
-        Phone(id: ID, ext: Int): Phones
+        phone(id: ID, ext: String): Phones
 
         allServiceRequests: [ServiceRequests!]
         serviceRequest(id: ID): ServiceRequests
@@ -271,10 +313,10 @@ const typeDefs = gql`
     type Mutation {
         createUserForm(input: uFormInput): UserForm
         updateUserForm(id: String!, input: uFormInput): UserForm
-        createPhone(input: uPhoneInput): Phones
+        createPhone(input: newPhoneInput): Phones
         updatePhone(id: String!, input: uPhoneInput): Phones
         deletePhone(id: String!): Result
-        updatePhoneOwners(id: ID, owners: String): Phones
+        updatePhoneOwners(id: ID, ext: String, owners: String): Phones
 
     }
 `

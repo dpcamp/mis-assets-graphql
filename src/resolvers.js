@@ -3,9 +3,29 @@ const sql = require('../models/index.js')
 const resolvers = {
       Query: {
             /* -------- User Queries */
-            async User(root, { user_name }, { models }) {
+            async user(root, args, { models }) {
                   try {
-                        const userName = models.users.findByPk(user_name, {
+                        if(args.ext){
+                        const userName = await models.users.findOne({
+                              include: [
+                                    {model: models.phones,
+                                      where: {extension: args.ext},
+                                      attributes:['id','full_number', 'extension', 'location'],
+                                      through: {attributes: []}
+                                    },
+                                      {model: models.pdq_computers
+                                      },
+                                      {
+                                        model: models.service_requests,
+                                        through: {attributes: []}
+                                      }
+                                  ]
+                        })
+                              return(userName)
+                        
+                        }
+                        else {
+                        const userName = await models.users.findByPk(args.user_name, {
                               include: [
                                     { model: models.phones },
                                     {
@@ -18,11 +38,13 @@ const resolvers = {
                                     { model: models.service_requests },
                               ]
                         })
+                        
                         if(!userName){
                               throw new Error(`${user_name} does not exist`)
                         } else {
                               return(userName)
                         }
+                  }
                   } catch (err) {
                         return (err)
                   }
@@ -105,12 +127,23 @@ const resolvers = {
                         return (err)
                   }
             },
-            async UserForm(root, { id }, { models }) {
+            async userForm(root, { id }, { models }) {
                   try {
                         const pending_count = await models.user_form.count({
                               where: { status: 'pending' }
                         })
-                        const form = await models.user_form.findByPk(id)
+                        const form = await models.user_form.findByPk(id, 
+                              {include: [
+                                    {
+                                          model: models.users,
+                                          as: 'submit_user'
+                                    },
+                                    {
+                                          model: models.users,
+                                          as: 'create_user'
+                                    }
+                              ]
+                        })
                         return { pending_count, form }
                   } catch (err) {
                         return (err)
@@ -131,7 +164,7 @@ const resolvers = {
                         return (err)
                   }
             },
-            async Computer(root, { computer_id }, { models }) {
+            async computer(root, { computer_id }, { models }) {
                   try {
                         return models.pdq_computers.findOne({
                               where: { computer_id: computer_id },
@@ -160,7 +193,7 @@ const resolvers = {
                         return (err)
                   }
             },
-            async Phone(root, args, { models }) {
+            async phone(root, args, { models }) {
                   try {
                         if (args.id) {
                               queryParams = { id: args.id }
@@ -219,9 +252,17 @@ const resolvers = {
             async createUserForm(root, { input }, { models }) {
 
                   try {
-                        const forms = await models.user_form.create(input)
+                        const res = await models.user_form.create(input)
+                        console.log(res)
+                        const form = await models.user_form.findByPk(res.id, {
+                              include:
+                              {
+                                    model: models.users,
+                                    as: 'submit_user'
+                              }
+                        })
                         const pending_count = await models.user_form.count({ where: { status: 'pending' } })
-                        return { pending_count, forms }
+                        return { pending_count, form }
                   } catch (err) {
                         return (err)
                   }
@@ -249,15 +290,45 @@ const resolvers = {
                   console.log(input)
                   try {
                         const phone = await models.phones.create(input)
-                        return (phone)
+                        if(input.UserSAMAccount)
+                        {
+                              await phone.setOwners(UserSAMAccount)
+                        }
+                        const newPhone = await models.phones.findOne({
+                              where: { id: phone.id },
+                              include: [{
+                                    model: models.users,
+                                    as: 'owners',
+                                    through: { attributes: [] }
+                              }]
+                        })
+                        return (newPhone)
                   }
                   catch (err) {
                         return (err)
                   }
             },
             async updatePhone(root, { id, input }, { models }) {
+                  console.log(id)
                   try {
+                        console.log(id)
+                        console.log(id, input)
+
                         await models.phones.update(input, {
+                              where: { id: id }
+                        })
+                        if (input.owners[0])
+                        {
+                              const phone = await models.phones.findOne({
+                                    where: { id: id }            
+                              })
+                              for( let i of input.owners)
+                              {
+                                    await phone.setOwners(i.user_name)
+                              }
+                              
+                        }
+                        const uPhone = await models.phones.findOne({
                               where: { id: id },
                               include: [{
                                     model: models.users,
@@ -265,15 +336,11 @@ const resolvers = {
                                     through: { attributes: [] }
                               }]
                         })
-                        const phone = await models.phones.findOne({
-                              where: { id: id },
-                              include: [{
-                                    model: models.users,
-                                    as: 'owners',
-                                    through: { attributes: [] }
-                              }]
-                        })
-                        return (phone)
+                        console.log(uPhone)
+                        return(uPhone)
+                        
+                        
+                        
                   }
                   catch (err) {
                         return (err)
@@ -288,15 +355,23 @@ const resolvers = {
                         return (err)
                   }
             },
-            async updatePhoneOwners(root, { id, owners }, { models }) {
+            async updatePhoneOwners(root, { id, ext, owners }, { models }) {
                   try {
+                        
+                        if (id){
+                              queryParams = {id: id}
+                        }
+                        if (ext){
+                              queryParams = {extension: ext }
+                        }
+
                         const getPhone = await models.phones.findOne({
-                              where: { id: id }
+                              where: queryParams
 
                         });
                         await getPhone.setOwners([owners])
                         const newPhone = await models.phones.findOne({
-                              where: { id: id },
+                              where: queryParams,
                               include: [{
                                     model: models.users,
                                     as: 'owners',
